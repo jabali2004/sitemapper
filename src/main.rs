@@ -1,8 +1,8 @@
 use clap::{ArgAction, Parser};
+use env_logger::Env;
 use log::{info, warn};
 
 mod extractor;
-use env_logger::Env;
 use extractor::extract_urls;
 
 mod generator;
