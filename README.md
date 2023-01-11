@@ -5,6 +5,7 @@
 ## TODO
 
 - [ ] Add basic cli functionality
+- [ ] Add recursive page mode
 - [ ] Add basic site mapping
 - [ ] Allow include and exclude of keywords
 - [ ] Allow granular set of pages where the last mod should change
