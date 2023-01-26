@@ -1,6 +1,7 @@
 use clap::{ArgAction, Parser};
 use env_logger::Env;
 use log::{info, warn};
+use url::Url;
 
 mod extractor;
 use extractor::extract_urls;
@@ -9,7 +10,6 @@ mod generator;
 use generator::generate_sitemap;
 
 mod validator;
-use url::Url;
 use validator::validated_url;
 
 /// Sitemapper: CLI tool for the creation of sitemaps.
@@ -19,8 +19,7 @@ pub struct Args {
     // Disable browser mode
     // #[arg(long = "disable-browser-mode", action=ArgAction::SetFalse)]
     // disable_browser_mode: Option<bool>,
-
-    // Adds a trailing slash to the generated urls
+    /// Adds a trailing slash to the generated urls
     #[arg(long="trailing-slash", action=ArgAction::SetTrue)]
     trailing_slash: Option<bool>,
 

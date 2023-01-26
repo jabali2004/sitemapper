@@ -1,5 +1,5 @@
 use headless_chrome::Browser;
-use log::{debug, info};
+use log::info;
 use scraper::{Html, Selector};
 use std::error::Error;
 use url::Url;
@@ -36,7 +36,7 @@ fn scrape_urls(target_url: &str, cont: &str) -> Vec<String> {
                 if (href_value.contains(&target_url) || href_value.starts_with("/"))
                     && !filtered_stuff.contains(&href_value.to_string())
                 {
-                    debug!("Link extracted: {}", href_value);
+                    info!("Link extracted: {}", href_value);
                     filtered_stuff.push(href_value.to_string());
                 }
             }

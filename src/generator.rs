@@ -28,6 +28,7 @@ pub fn generate_sitemap(target_url: &Url, url_list: Vec<String>, args: &Args) {
     match url_writer {
         Ok(mut writer) => {
             for validated_url in validated_urls {
+                info!("Add sitemap entry for: {}", validated_url);
                 let url_entry = UrlEntry::builder()
                     .loc(&validated_url)
                     .lastmod(build_lastmod());
@@ -54,22 +55,37 @@ fn build_lastmod() -> chrono::DateTime<FixedOffset> {
 
 /// Format url to be a valid sitemap url
 fn format_url(target_url: &Url, url: &str, args: &Args) -> String {
-    if url.starts_with("/") {
-        let trailing_slash = match args.trailing_slash.unwrap() {
-            true => "/",
-            false => "",
-        };
+    let path = match url.starts_with("/") {
+        true => split_path(url),
+        false => {
+            let parsed_url = Url::parse(url).expect("Unable to parse URL!");
+            split_path(parsed_url.path())
+        }
+    };
 
-        println!("Trailing: {}", trailing_slash.clone());
+    let trailing_slash = match args.trailing_slash.unwrap() && !path.ends_with("/") {
+        true => "/",
+        false => "",
+    };
 
-        return format!(
-            "{}://{}{}{}",
-            target_url.scheme(),
-            target_url.host_str().unwrap(),
-            url,
-            trailing_slash,
-        );
+    return format!(
+        "{}://{}{}{}",
+        target_url.scheme(),
+        target_url.host_str().unwrap(),
+        path,
+        trailing_slash,
+    );
+}
+
+/// Split path
+fn split_path(url: &str) -> String {
+    let coll: Vec<&str> = url.split("#").collect();
+
+    match coll.first() {
+        Some(element) => String::from(element.clone()),
+        None => {
+            warn!("Unable to get first element of vec from URL: {}", url);
+            String::new()
+        }
     }
-
-    return format!("{}", url);
 }
