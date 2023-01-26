@@ -2,11 +2,14 @@ use chrono::FixedOffset;
 use log::{info, warn};
 use sitemap::{structs::UrlEntry, writer::SiteMapWriter};
 use std::{fs::File, io::LineWriter};
+use url::Url;
+
+use crate::Args;
 
 static DEFAULT_PATH: &str = "./sitemap.xml";
 
 /// Generate a site map for given urls
-pub fn generate_sitemap(url_list: Vec<String>, target_url: &str) {
+pub fn generate_sitemap(target_url: &Url, url_list: Vec<String>, args: &Args) {
     let file_path = DEFAULT_PATH;
     let file =
         File::create(file_path).expect(&format!("Could not open and or create file {}", file_path));
@@ -16,7 +19,7 @@ pub fn generate_sitemap(url_list: Vec<String>, target_url: &str) {
 
     let mut validated_urls: Vec<String> = url_list
         .iter()
-        .map(|url| format_url(url.as_str(), target_url))
+        .map(|url| format_url(&target_url, url.as_str(), &args))
         .collect();
 
     validated_urls.sort();
@@ -50,9 +53,22 @@ fn build_lastmod() -> chrono::DateTime<FixedOffset> {
 }
 
 /// Format url to be a valid sitemap url
-fn format_url(url: &str, target_url: &str) -> String {
+fn format_url(target_url: &Url, url: &str, args: &Args) -> String {
     if url.starts_with("/") {
-        return format!("{}{}", target_url, url);
+        let trailing_slash = match args.trailing_slash.unwrap() {
+            true => "/",
+            false => "",
+        };
+
+        println!("Trailing: {}", trailing_slash.clone());
+
+        return format!(
+            "{}://{}{}{}",
+            target_url.scheme(),
+            target_url.host_str().unwrap(),
+            url,
+            trailing_slash,
+        );
     }
 
     return format!("{}", url);

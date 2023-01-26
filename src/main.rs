@@ -9,15 +9,21 @@ mod generator;
 use generator::generate_sitemap;
 
 mod validator;
+use url::Url;
 use validator::validated_url;
 
 /// Sitemapper: CLI tool for the creation of sitemaps.
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
-struct Args {
+pub struct Args {
     // Disable browser mode
     // #[arg(long = "disable-browser-mode", action=ArgAction::SetFalse)]
     // disable_browser_mode: Option<bool>,
+
+    // Adds a trailing slash to the generated urls
+    #[arg(long="trailing-slash", action=ArgAction::SetTrue)]
+    trailing_slash: Option<bool>,
+
     /// Url used for the creation for the sitemap
     url: String,
 }
@@ -26,17 +32,19 @@ fn main() {
     init();
 
     let args = Args::parse();
-    let target_location = args.url.as_str();
+    let url_str = args.url.as_str();
 
-    if !validated_url(&target_location) {
+    if !validated_url(&url_str) {
         warn!("A target url is needed!")
     }
 
-    info!("Start extracting urls from page: {}", &target_location);
+    let target_url = Url::parse(url_str).expect("Unable to parse URL!");
 
-    let extracted_urls = extract_urls(&target_location);
+    info!("Start extracting urls from page: {}", &url_str);
+
+    let extracted_urls = extract_urls(&target_url);
     match extracted_urls {
-        Ok(urls) => generate_sitemap(urls, &target_location),
+        Ok(urls) => generate_sitemap(&target_url, urls, &args),
         Err(_) => warn!("Something weird happened!"),
     }
 }

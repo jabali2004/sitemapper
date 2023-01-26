@@ -1544,6 +1544,7 @@ dependencies = [
  "log 0.4.17",
  "scraper",
  "sitemap",
+ "url 2.3.1",
 ]
 
 [[package]]

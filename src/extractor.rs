@@ -2,24 +2,25 @@ use headless_chrome::Browser;
 use log::{debug, info};
 use scraper::{Html, Selector};
 use std::error::Error;
+use url::Url;
 
 /// Extract urls from page
-pub fn extract_urls(target_url: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub fn extract_urls(target_url: &Url) -> Result<Vec<String>, Box<dyn Error>> {
     let browser = Browser::default()?;
     let tab = browser.wait_for_initial_tab()?;
 
-    tab.navigate_to(target_url)?;
+    tab.navigate_to(target_url.as_str())?;
     _ = tab.wait_until_navigated();
 
     let content = tab.get_content()?;
     _ = tab.close(true);
 
-    let filtered_stuff = scrape_urls(&content, &target_url);
+    let filtered_stuff = scrape_urls(&target_url.as_str(), &content);
     return Ok(filtered_stuff);
 }
 
 /// Scrape urls from document
-fn scrape_urls(cont: &str, target_url: &str) -> Vec<String> {
+fn scrape_urls(target_url: &str, cont: &str) -> Vec<String> {
     let document = Html::parse_document(cont.clone());
     let selector = Selector::parse("a").unwrap();
 
