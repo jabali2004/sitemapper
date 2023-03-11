@@ -1,7 +1,7 @@
 [package]
 name = "sitemapper"
 description = "CLI tool for generating sitemaps."
-version = "0.0.2"
+version = "0.0.3"
 edition = "2021"
 license-file = "LICENSE"
 
@@ -11,8 +11,8 @@ license-file = "LICENSE"
 clap = { version = "4.0.32", features = ["derive"] }
 log = "0.4"
 env_logger = "0.10.0"
-headless_chrome = "1.0.1"
-scraper = "0.14.0"
+headless_chrome = "1.0.5"
+scraper = "0.15.0"
 sitemap = "0.4.1"
 chrono = "0.4.23"
 url = "2.3.1"

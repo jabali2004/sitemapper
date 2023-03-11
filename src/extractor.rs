@@ -7,7 +7,7 @@ use url::Url;
 /// Extract urls from page
 pub fn extract_urls(target_url: &Url) -> Result<Vec<String>, Box<dyn Error>> {
     let browser = Browser::default()?;
-    let tab = browser.wait_for_initial_tab()?;
+    let tab = browser.new_tab()?;
 
     tab.navigate_to(target_url.as_str())?;
     _ = tab.wait_until_navigated();
