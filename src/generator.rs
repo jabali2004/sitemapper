@@ -48,7 +48,7 @@ pub fn generate_sitemap(target_url: &Url, url_list: Vec<String>, args: &Args) {
     }
 }
 
-/// Build lastmod value vor sitemap entry
+/// Build lastmod value for sitemap entry
 fn build_lastmod() -> chrono::DateTime<FixedOffset> {
     return chrono::offset::Utc::now().with_timezone(&FixedOffset::west_opt(0).unwrap());
 }
@@ -79,10 +79,10 @@ fn format_url(target_url: &Url, url: &str, args: &Args) -> String {
 
 /// Split path
 fn split_path(url: &str) -> String {
-    let coll: Vec<&str> = url.split("#").collect();
+    let coll = url.split("#").collect::<Vec<&str>>();
 
     match coll.first() {
-        Some(element) => String::from(element.clone()),
+        Some(element) => String::from(*element),
         None => {
             warn!("Unable to get first element of vec from URL: {}", url);
             String::new()

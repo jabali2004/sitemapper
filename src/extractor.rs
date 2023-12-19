@@ -21,7 +21,7 @@ pub fn extract_urls(target_url: &Url) -> Result<Vec<String>, Box<dyn Error>> {
 
 /// Scrape urls from document
 fn scrape_urls(target_url: &str, cont: &str) -> Vec<String> {
-    let document = Html::parse_document(cont.clone());
+    let document = Html::parse_document(cont);
     let selector = Selector::parse("a").unwrap();
 
     let selection = document.select(&selector);
