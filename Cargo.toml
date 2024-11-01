@@ -12,7 +12,7 @@ clap = { version = "4.5.20", features = ["derive"] }
 log = "0.4"
 env_logger = "0.10.2"
 headless_chrome = "1.0.7"
-scraper = "0.20.0"
+scraper = "0.21.0"
 sitemap = "0.4.1"
 chrono = "0.4.38"
 url = "2.5.2"
